@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <link rel="stylesheet" href="css/style.css">
+    <title>Synchronisation</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">  </script>  
+ 
+    <script type="text/javascript" language="javascript">  
+        $(document).ready(function() {  
+
+            document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                  "body").style.visibility = "hidden";
+                document.querySelector(
+                  "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                  "#loader").style.display = "none";
+                document.querySelector(
+                  "body").style.visibility = "visible";
+            }
+        };
+        
+            //* ----------------------------------------------------------------------------------------------------
+            //* Dectection du mode Online/Offline
+            //* ----------------------------------------------------------------------------------------------------
+
+            $test_connexion = '';
+            window.addEventListener("load", (event) => {
+                $test_connexion = navigator.onLine ? "Online" : "OFFline";
+            });
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Test si IndexDB est supporté par le navigateur
+            //* ----------------------------------------------------------------------------------------------------
+
+            if (!window.indexedDB) {
+                console.log(`IndexedDB non supporté par le navigateur`);
+                window.location.href = 'anomalie_indexeddb.html';
+            } else {
+                console.log(`IndexedDB supporté par le navigateur`);                 
+            }
+            
+            //* ----------------------------------------------------------------------------------------------------
+            //* Ouverture de la base de données SO POSING
+            //*
+            //* La méthode open() renvoie un objet de requête qui est une instance de l' IDBOpenDBRequest interface.
+            //* ----------------------------------------------------------------------------------------------------
+
+            const request = indexedDB.open('SOPOSING', 1);
+
+            //* Détection d'une erreur sur l'ouverture de la base de données
+            request.onerror = (event) => {
+                console.error(`Erreur sur l'ouverture : ${event.target.errorCode}`);
+            };
+
+            //* La base de données est ouverte
+            request.onsuccess = (event) => {
+                const db = event.target.result;
+
+                //* Traitement effectué si connexion tinternet
+               
+                if (navigator.onLine)
+                {
+                    //* Recherche des catégories en fonction de la date de synchronisation
+                    
+                    Lecture_Date_Synchro(db, 'categorie')
+                    .then(function(result){        
+                        console.log('Lecture date synchro CATEGORIE : '+ result.dt_synchro);
+                        Synchro_Categorie(db, result.dt_synchro);
+                    })
+                    .catch(function(result){   
+                        console.log('Date inexistante categorie' );  
+                        insertDateSynchro(db, 1, 'categorie')
+                        Synchro_Categorie(db, '1970-01-01');
+                    });
+
+                    Lecture_Date_Synchro(db, 'sous_categorie')
+                    .then(function(result){        
+                        console.log('Lecture date synchro SOUS CATEGORIE : '+ result.dt_synchro);
+                        Synchro_Sous_Categorie(db, result.dt_synchro);
+                    })
+                    .catch(function(result){   
+                        console.log('Date inexistante sous categorie' );  
+                        insertDateSynchro(db, 2, 'sous_categorie')
+                        Synchro_Sous_Categorie(db, '1970-01-01');
+                    });
+
+                    Lecture_Date_Synchro(db, 'filtre')
+                    .then(function(result){        
+                        console.log('Lecture date synchro FILTRE : '+ result.dt_synchro);
+                        Synchro_Filtre(db, result.dt_synchro);
+                    })
+                    .catch(function(result){   
+                        console.log('Date inexistante FILTRE' );  
+                        insertDateSynchro(db, 3, 'filtre')
+                        Synchro_Filtre(db, '1970-01-01');
+                    });
+
+                    Lecture_Date_Synchro(db, 'pose')
+                    .then(function(result){        
+                        console.log('Lecture date synchro POSE : '+ result.dt_synchro);
+                        Synchro_Pose(db, result.dt_synchro);
+                    })
+                    .catch(function(result){   
+                        console.log('Date inexistante POSE' );  
+                        insertDateSynchro(db, 4, 'pose')
+                        Synchro_Pose(db, '1970-01-01');
+                    });
+                    // var x = setTimeout(function() { 
+                    //     window.location = 'index.html'
+                    // }, 10000);  
+
+                }
+            };
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Création des tables au premier lancement du programme
+            //*
+            //* Lorsque vous ouvrez la base de données pour la première fois, l' onupgradeneededévénement se déclenche.
+            //* ----------------------------------------------------------------------------------------------------
+
+            request.onupgradeneeded = (event) => {
+                let db = event.target.result;
+        
+                // Création de la table ( object store ) : date de synchronisation
+                // avec incrémentation automatique
+                let store_dt_synchro = db.createObjectStore('date_synchronisation', {keyPath: 'id_synchro'});
+
+                // Création d'un index sur la propriété : dt_synchronisation
+                let index_dt_synchro = store_dt_synchro.createIndex('nom_synchro', 'nom_synchro', {
+                    unique: true
+                });
+
+                // Création de la table ( object store ) : catégorie
+                // avec incrémentation automatique
+                let store_categorie = db.createObjectStore('categorie', {keyPath: 'id_categorie'});
+
+                // Création d'un index sur la propriété : id_categorie
+                let index_categorie = store_categorie.createIndex('id_categorie', 'id_categorie', {
+                    unique: true
+                });
+
+                let nom_categorie = store_categorie.createIndex('nom_categorie', 'nom_categorie', {
+                    unique: true
+                });
+
+                // Création de la table ( object store ) = sous catégorie
+                // avec incrémentation automatique
+                let store_sscategorie = db.createObjectStore('sous_categorie', {keyPath: 'id_sous_categorie'});
+
+                // Création d'un index sur la propriété : id_sous_ategorie
+                let index_sscategorie = store_sscategorie.createIndex('id_sous_categorie', 'id_sous_categorie', {
+                    unique: true
+                });
+
+                let nom_sous_categorie = store_sscategorie  .createIndex('nom_sous_categorie', 'nom_sous_categorie', {
+                    unique: true
+                });
+
+                let id_categorie = store_sscategorie  .createIndex('id_categorie', 'id_categorie', {
+                    unique: false
+                });
+
+                // Création de la table ( object store ) = filtre
+                // avec incrémentation automatique
+                let store_filtre = db.createObjectStore('filtre', {keyPath: 'id_filtre'});
+
+                // Création d'un index sur la propriété : id_filtre
+                let index_filtre = store_filtre.createIndex('id_filtre', 'id_filtre', {
+                    unique: true
+                });
+
+                // Création de la table ( object store ) = filtre
+                // avec incrémentation automatique
+                let store_pose = db.createObjectStore('pose', {keyPath: 'id_pose'});
+
+                // Création d'un index sur la propriété : id_filtre
+                let index_pose = store_pose.createIndex('id_pose', 'id_pose', {
+                    unique: true
+                });
+
+                // Création d'un index sur la propriété : id_filtre
+                let index_pose_ss_categorie = store_pose.createIndex('id_sous_categorie', 'id_sous_categorie', {
+                    unique: false
+                });
+
+            };
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Initialisation de la date de sycnhronisation
+            //*
+            //* Paramètres : base de données, la clé de recherche et la date du jour
+            //* ----------------------------------------------------------------------------------------------------    
+
+            function insertDateSynchro(db, index, key) {
+
+                // Création d'une nouvelle transaction sur l'objet : date_synchronisation
+                const txn = db.transaction('date_synchronisation', 'readwrite');
+
+                // On se positionne sur l'objet store : date_synchronisation
+                const store = txn.objectStore('date_synchronisation');
+
+                //* Initialisation de l'objet synchro avec la date du jour
+                let synchro = {
+                    id_synchro : index,
+                    nom_synchro : key,
+                    dt_synchro :  date_du_jour()
+                }
+
+                // Ajout de l'enregistrement : date_synchronisation, passé en paramètre
+                let query = store.put(synchro);
+
+                // En cas de succès
+                query.onsuccess = function (event) {
+                console.log(event);
+                };
+
+                // En cas d'echec
+                query.onerror = function (event) {
+                console.log(event.target.errorCode);
+                }
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Insertion d'une catégorie
+            //*
+            //* Paramètres : objet categorie : nom_categorie, photo_categorie
+            //* ----------------------------------------------------------------------------------------------------
+            
+            async function insertCategorie(db, key) {
+                return new Promise(function(resolve, reject){
+                    // Création d'une nouvelle transaction sur l'objet : categorie
+                    const txn = db.transaction('categorie', 'readwrite');
+
+                    // On se positionne sur l'objet store : categorie
+                    const store = txn.objectStore('categorie');
+
+                    // Ajout de l'enregistrement : categorie, passé en paramètre
+                    let query = store.put(key);
+
+                    // En cas de succès
+                    query.onsuccess = function (event) {
+                        console.log('insertCategorie OK : ' + key.nom_categorie);
+                        return('OK');
+                    };
+
+                    // En cas d'echec
+                    query.onerror = function (event) {
+                        console.log('insertCategorie KO : ' + key.nom_categorie);
+                        return('KO');
+                    }
+                });
+            }
+
+           //* ----------------------------------------------------------------------------------------------------
+            //* Insertion d'une catégorie
+            //*
+            //* Paramètres : objet categorie : nom_categorie, photo_categorie
+            //* ----------------------------------------------------------------------------------------------------
+            
+            async function insertSousCategorie(db, key) {
+                return new Promise(function(resolve, reject){
+                    // Création d'une nouvelle transaction sur l'objet : categorie
+                    const txn = db.transaction('sous_categorie', 'readwrite');
+
+                    // On se positionne sur l'objet store : categorie
+                    const store = txn.objectStore('sous_categorie');
+
+                    // Ajout de l'enregistrement : categorie, passé en paramètre
+                    let query = store.put(key);
+
+                    //console.table(key);
+                    
+                    // En cas de succès
+                    query.onsuccess = function (event) {
+                        console.log('insertSousCategorie OK : ' + key.nom_sous_categorie);
+                        return('OK');
+                    };
+
+                    // En cas d'echec
+                    query.onerror = function (event) {
+                        console.log('insertSousCategorie KO : ' + query.error);
+                        return('KO');
+                    }
+                });
+            }
+
+           //* ----------------------------------------------------------------------------------------------------
+            //* Insertion d'une catégorie
+            //*
+            //* Paramètres : objet categorie : nom_categorie, photo_categorie
+            //* ----------------------------------------------------------------------------------------------------
+            
+            async function insertFiltre(db, key) {
+                return new Promise(function(resolve, reject){
+                    // Création d'une nouvelle transaction sur l'objet : categorie
+                    const txn = db.transaction('filtre', 'readwrite');
+
+                    // On se positionne sur l'objet store : categorie
+                    const store = txn.objectStore('filtre');
+
+                    // Ajout de l'enregistrement : categorie, passé en paramètre
+                    let query = store.put(key);
+
+                    //console.table(key);
+                    
+                    // En cas de succès
+                    query.onsuccess = function (event) {
+                        console.log('insertFiltre OK : ' + key.id_filtre);
+                        return('OK');
+                    };
+
+                    // En cas d'echec
+                    query.onerror = function (event) {
+                        console.log('insertFiltre KO : ' + query.error);
+                        return('KO');
+                    }
+                });
+            }
+
+          //* ----------------------------------------------------------------------------------------------------
+            //* Insertion d'une catégorie
+            //*
+            //* Paramètres : objet categorie : nom_categorie, photo_categorie
+            //* ----------------------------------------------------------------------------------------------------
+            
+            async function insertPose(db, key) {
+                return new Promise(function(resolve, reject){
+                    // Création d'une nouvelle transaction sur l'objet : categorie
+                    const txn = db.transaction('pose', 'readwrite');
+
+                    // On se positionne sur l'objet store : categorie
+                    const store = txn.objectStore('pose');
+
+                    // Ajout de l'enregistrement : categorie, passé en paramètre
+                    let query = store.put(key);
+
+                    //console.table(key);
+                    
+                    // En cas de succès
+                    query.onsuccess = function (event) {
+                        console.log('insertPose OK : ' + key.id_pose);
+                        return('OK');
+                    };
+
+                    // En cas d'echec
+                    query.onerror = function (event) {
+                        console.log('insertPose KO : ' + query.error);
+                        return('KO');
+                    }
+                });
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Accès aux informations "categorie" par le numéroi d'index
+            //*
+            //* Paramètres : nom de la base de données et id de la catégorie
+            //* ----------------------------------------------------------------------------------------------------
+
+            async function Lecture_Date_Synchro(db, key){
+                return new Promise(function(resolve, reject){
+
+                    const txn = db.transaction('date_synchronisation', 'readonly');
+                    const store = txn.objectStore('date_synchronisation');
+                
+                    // get the index from the Object Store
+                    const index = store.index('nom_synchro');
+                    // query by indexes
+                    let query = index.get(key);
+
+                    // return the result object on success
+
+                    query.onsuccess = (event) => {
+                        if (!event.target.result) {
+                            console.log(`Lecture_Date_Synchro : Accès ${key} non trouve`);
+                            reject(event.target.result);
+                        } else {
+                            console.table(event.target.result);
+                            resolve(event.target.result);
+                        }
+                    };
+
+                    query.onerror = (event) => {
+                        console.log('erreur ' + event.target.errorCode);
+                        reject(event.target.errorCode);
+
+                    }
+
+                    // close the database connection
+                    // txn.oncomplete = function () {
+                    // };
+
+                });
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Mise à jour de la date de synchronisation 
+            //*
+            //* Paramètres : base de données, la clé de recherche et la date du jour
+            //* ----------------------------------------------------------------------------------------------------
+
+            async function Maj_Date_Synchro(db, key){
+                return new Promise(function(resolve, reject){
+
+                    //* Ouverture de la table : date_synchronisation
+                    const txn = db.transaction('date_synchronisation', 'readwrite');
+                    const store = txn.objectStore('date_synchronisation');
+
+                    // get the index from the Object Store
+                    const index = store.index('nom_synchro');
+ 
+                    // query by indexes
+                    let query = index.get(key);
+ 
+                    //* Enregistrement trouvé
+                    query.onsuccess = ()=> {
+
+                        //* Initialisation de l'objet synchro avec la date du jour
+
+                        const synchro = query.result;
+                        synchro.dt_synchro = date_du_jour();
+
+                        console.table(synchro);
+
+                        // Mise à jour de l'enregostrement avec la clé en paramètre
+                        const updateRequest = store.put(synchro);
+
+                        updateRequest.onsuccess = () => {
+                            console.log(`Mise à jour de la date de synchronisation ${updateRequest.result}`)
+                            resolve('OK');
+                        }
+
+                        updateRequest.onerror = () => {
+                            console.log(`Erreur sur la mise à jour de la date de synchronisation ${updateRequest.error}`);
+                            reject('KO');
+                        }
+                    }
+
+                    query.onerror = (event) => {
+                        console.log('erreur ' + event.target.errorCode);
+                        reject(event.target.errorCode);
+                    }
+
+                });
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Synchronisation des catégorie à partir de la date de synchronisation
+            //*
+            //* Paramètres : nom de la base de données et date de synchronisation
+            //* ----------------------------------------------------------------------------------------------------
+
+            function Synchro_Categorie(db, $date_synchro_categorie) {
+                $.ajax({
+                    url: 'php/lecture_categories.php',
+                    data: 'dthr_synchro=' + $date_synchro_categorie,
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) { 
+
+                        switch (data.CODE_RETOUR) {
+                            case 'OK':
+
+                                // Test si le nombre de catégorie est supérieur à 0
+                                // Si oui Alors on traite les catégories
+
+                                if (parseInt(data.NB_CATEGORIES) > 0) 
+                                {
+                                    // Parcours des catégories
+                                    data.LISTE_CATEGORIES.forEach(element => {
+
+                                        let categorie = {
+                                            id_categorie    : element.id_categorie,
+                                            nom_categorie   : element.nom_categorie,
+                                            photo_categorie : element.photo_categorie,
+                                            actif           : element.actif_categorie,
+                                            dt_maj          : element.dt_maj_categorie
+                                        }
+                                        
+                                        // Parcours des catégories
+                                        insertCategorie(db, categorie)
+                                        .then(function(result){   
+                                            console.log('insertCategorie : OK');
+                                        })
+                                        .catch(function(result){ 
+                                            console.log('insertCategorie : KO');   
+                                        });
+                                    });
+
+                                    //* --- Mise à jour de la date de synchronisation
+                                    Maj_Date_Synchro(db, 'categorie')
+                                    .then(function(result){   
+                                        console.log(`Mise à jour de la date de synchronisation x : ${result}`);
+                                    })
+                                    .catch(function(result){ 
+                                        console.log(`Mise à jour de la date de synchronisation : ${result}`);   
+                                    });
+                                } else {
+                                    console.log('Pas de synchronisation : CATEGORIE'); 
+                                }
+                                break;
+                            case 'ANOMALIE':
+                                // GESTION DES ERREURS
+                                break;
+                            default:
+                                // GESTION DES ERREURS
+                                break;
+                        }
+                    }
+                });
+
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Synchronisation des catégorie à partir de la date de synchronisation
+            //*
+            //* Paramètres : nom de la base de données et date de synchronisation
+            //* ----------------------------------------------------------------------------------------------------
+
+            function Synchro_Sous_Categorie(db, $date_synchro) {
+                $.ajax({
+                    url: 'php/lecture_sous_categories.php',
+                    data: 'dthr_synchro=' + $date_synchro,
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) { 
+
+                        switch (data.CODE_RETOUR) {
+                            case 'OK':
+
+                                // Test si le nombre de catégorie est supérieur à 0
+                                // Si oui Alors on traite les catégories
+
+                                if (parseInt(data.NB_SOUS_CATEGORIES) > 0) 
+                                {
+                                    // Parcours des catégories
+                                    data.LISTE_SOUS_CATEGORIES.forEach(element => {
+
+                                        let sous_categorie = {
+                                            id_sous_categorie       : element.id_sous_categorie,
+                                            nom_sous_categorie      : element.nom_sous_categorie,
+                                            photo_sous_categorie    : element.photo_sous_categorie,
+                                            actif_sous_categorie    : element.actif_sous_categorie,
+                                            dt_maj_sous_categorie   : element.dt_maj_sous_categorie,
+                                            id_categorie            : element.id_categorie
+                                        }
+
+                                        // Parcours des catégories
+                                        insertSousCategorie(db, sous_categorie)
+                                        .then(function(result){   
+                                            console.log('insertSousCategorie : OK');
+                                        })
+                                        .catch(function(result){ 
+                                            console.log('insertSousCategorie : KO');   
+                                        });
+                                    });
+
+                                    //* --- Mise à jour de la date de synchronisation
+                                    Maj_Date_Synchro(db, 'sous_categorie')
+                                    .then(function(result){   
+                                        console.log(`Mise à jour de la date de synchronisation SOUS CATEGORIE : ${result}`);
+                                    })
+                                    .catch(function(result){ 
+                                        console.log(`Mise à jour de la date de synchronisation SOUS CATEGORIE : ${result}`);   
+                                    });
+                                } else {
+                                    console.log('Pas de synchronisation : SOUS CATEGORIE'); 
+                                }
+                                break;
+                            case 'ANOMALIE':
+                                // GESTION DES ERREURS
+                                break;
+                            default:
+                                // GESTION DES ERREURS
+                                break;
+                        }
+                    }
+                });
+
+            }
+
+           //* ----------------------------------------------------------------------------------------------------
+            //* Synchronisation des catégorie à partir de la date de synchronisation
+            //*
+            //* Paramètres : nom de la base de données et date de synchronisation
+            //* ----------------------------------------------------------------------------------------------------
+
+            function Synchro_Filtre(db, $date_synchro) {
+                $.ajax({
+                    url: 'php/lecture_filtre.php',
+                    data: 'dthr_synchro=' + $date_synchro,
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) { 
+
+                        switch (data.CODE_RETOUR) {
+                            case 'OK':
+
+                                // Test si le nombre de catégorie est supérieur à 0
+                                // Si oui Alors on traite les catégories
+
+                                if (parseInt(data.NB_RECORD) > 0) 
+                                {
+                                    // Parcours des catégories
+                                    data.LISTE.forEach(element => {
+
+                                        let filtre = {
+                                            id_filtre               : element.id_filtre,
+                                            nom_filtre              : element.nom_filtre,
+                                            id_sous_categorie       : element.id_sous_categorie,
+                                            actif_filtre            : element.actif_filtre,
+                                            dt_maj_filtre           : element.dt_maj_filtre
+                                         }
+
+                                        // Insertion filtres
+                                        insertFiltre(db, filtre)
+                                        .then(function(result){   
+                                            console.log('insertFiltre : OK');
+                                        })
+                                        .catch(function(result){ 
+                                            console.log('insertFiltre : KO');   
+                                        });
+                                    });
+
+                                    //* --- Mise à jour de la date de synchronisation
+                                    Maj_Date_Synchro(db, 'filtre')
+                                    .then(function(result){   
+                                        console.log(`Mise à jour de la date de synchronisation FILTRE : ${result}`);
+                                    })
+                                    .catch(function(result){ 
+                                        console.log(`Mise à jour de la date de synchronisation FILTRE : ${result}`);   
+                                    });
+                                } else {
+                                    console.log('Pas de synchronisation : FILTRE'); 
+                                }
+                                break;
+                            case 'ANOMALIE':
+                                // GESTION DES ERREURS
+                                break;
+                            default:
+                                // GESTION DES ERREURS
+                                break;
+                        }
+                    }
+                });
+
+            }
+
+           //* ----------------------------------------------------------------------------------------------------
+            //* Synchronisation des catégorie à partir de la date de synchronisation
+            //*
+            //* Paramètres : nom de la base de données et date de synchronisation
+            //* ----------------------------------------------------------------------------------------------------
+
+            function Synchro_Pose(db, $date_synchro) {
+                $.ajax({
+                    url: 'php/lecture_pose.php',
+                    data: 'dthr_synchro=' + $date_synchro,
+                    dataType: 'json',
+                    async: false,
+                    success: function(data) { 
+
+                        switch (data.CODE_RETOUR) {
+                            case 'OK':
+
+                                // Test si le nombre de catégorie est supérieur à 0
+                                // Si oui Alors on traite les catégories
+
+                                if (parseInt(data.NB_RECORD) > 0) 
+                                {
+                                    // Parcours des catégories
+                                    data.LISTE.forEach(element => {
+
+                                        let pose = {
+                                            id_pose                 : element.id_pose,
+                                            photo_pose              : element.photo_pose,
+                                            commentaire             : element.commentaire,
+                                            favori                  : element.favori,
+                                            id_filtre               : element.id_filtre,
+                                            id_sous_categorie       : element.id_sous_categorie,
+                                            actif_pose              : element.actif_filtre,
+                                            dt_maj_fpose            : element.dt_maj_filtre
+                                         }
+
+                                        // Insertion filtres
+                                        insertPose(db, pose)
+                                        .then(function(result){   
+                                            console.log('insertPose : OK');
+                                        })
+                                        .catch(function(result){ 
+                                            console.log('insertPose : KO');   
+                                        });
+                                    });
+
+                                    //* --- Mise à jour de la date de synchronisation
+                                    Maj_Date_Synchro(db, 'pose')
+                                    .then(function(result){   
+                                        console.log(`Mise à jour de la date de synchronisation POSE : ${result}`);
+                                    })
+                                    .catch(function(result){ 
+                                        console.log(`Mise à jour de la date de synchronisation POSE : ${result}`);   
+                                    });
+                                } else {
+                                    console.log('Pas de synchronisation : POSE'); 
+                                }
+                                break;
+                            case 'ANOMALIE':
+                                // GESTION DES ERREURS
+                                break;
+                            default:
+                                // GESTION DES ERREURS
+                                break;
+                        }
+                    }
+                });
+
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Retourne la date du jour au format AAAA-MM-JJ HH:MM:SS
+            //* ----------------------------------------------------------------------------------------------------
+
+            function date_du_jour(){
+                var d       = new Date();
+                var date    = d.getFullYear() + '-' + ( (d.getMonth()<10 ? ('0' + (d.getMonth()+1)) : (d.getMonth()+1) ) + '-' + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate() ) );
+                var heure   = (d.getHours()<10 ? ('0' + d.getHours()) : d.getHours()) + ":" + (d.getMinutes() < 10 ? ('0' + d.getMinutes()) : d.getMinutes()) + ":" + (d.getSeconds() < 10? ('0' +  d.getSeconds()) : d.getSeconds() );
+
+                return date + ' ' + heure;
+            }
+
+            //* ----------------------------------------------------------------------------------------------------
+            //* Suppression de la base de données
+            //*
+            //* Paramètres : nom de la base de données
+            //* ----------------------------------------------------------------------------------------------------
+
+            async function Delete_DataBase(nom) {
+                return new Promise(function(resolve, reject){
+
+                    var request = indexedDB.deleteDatabase(nom);
+
+                    //* Détection d'une erreur sur l'ouverture de la base de données
+                    request.onerror = (event) => {
+                        console.log(`Erreur sur la suppression de la base de données : ${event.target.errorCode}`);
+                        reject('KO');
+                    };
+
+                    //* La base de données est ouverte
+                    request.onsuccess = (event) => {
+                        console.log(`Suppresion de la base de donnée : ${nom}`);
+                        resolve('OK');
+                    };
+                });
+            }
+    });  
+    </script> 
+
+</body>
+</html>
