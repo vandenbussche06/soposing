@@ -78,7 +78,6 @@
 
           nro_categorie = parseInt(sessionStorage.getItem("id_categorie"));
 
-
           getCategorieById(db, nro_categorie)
           .then(function(result){     
             $('#TITRE').html(result.nom_categorie.toUpperCase()); 
