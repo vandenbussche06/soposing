@@ -17,6 +17,13 @@
     <script type="text/javascript" language="javascript">  
         $(document).ready(function() {  
 
+
+            var url = document.location.protocol + "//" + document.location.hostname + ":27018";
+            var api = "url:27018/user_validate.php";
+
+            console.log('*' + url);
+
+
             document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
                 document.querySelector(
@@ -462,6 +469,7 @@
             //* ----------------------------------------------------------------------------------------------------
 
             function Synchro_Categorie(db, $date_synchro_categorie) {
+                
                 $.ajax({
                     url: 'php/lecture_categories.php',
                     data: 'dthr_synchro=' + $date_synchro_categorie,
@@ -517,6 +525,9 @@
                                 // GESTION DES ERREURS
                                 break;
                         }
+                    },
+                    error: function () {
+                        console.log('Erreur de réceupération des données : CATEGORIE'); 
                     }
                 });
 
@@ -585,6 +596,9 @@
                                 // GESTION DES ERREURS
                                 break;
                         }
+                    },
+                    error: function () {
+                        console.log('Erreur de réceupération des données : SOUS CATEGORIE'); 
                     }
                 });
 
@@ -652,6 +666,9 @@
                                 // GESTION DES ERREURS
                                 break;
                         }
+                    },
+                    error: function () {
+                        console.log('Erreur de réceupération des données : FILTRE'); 
                     }
                 });
 
@@ -722,6 +739,9 @@
                                 // GESTION DES ERREURS
                                 break;
                         }
+                    },
+                    error: function () {
+                        console.log('Erreur de réceupération des données : POSE'); 
                     }
                 });
 

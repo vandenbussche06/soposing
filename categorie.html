@@ -80,8 +80,7 @@
           getAllCategorie(db)
           .then(function(result){               
              result.forEach(categorie => {
-                          
-              if (categorie.actif === '1') {
+              if (parseInt(categorie.actif) === '1') {
                 $ligne += ` <div id="${categorie.id_categorie}" class='categorie' style="background: url(data:image/png;base64,${categorie.photo_categorie}) no-repeat center;"> 
                               <div id="${categorie.id_categorie}" class='overlay_light'></div>    
                               <div id="${categorie.id_categorie}" class='titre'> ${categorie.nom_categorie}</div> 

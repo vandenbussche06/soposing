@@ -1,12 +1,14 @@
 <?php
-try {
-
-	$dbh = new PDO('mysql:host=db5002726029.hosting-data.io;dbname=dbs2172565; charset=utf8', 'dbu1692362', 'Aqwaze123*');
-
-	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	
-} catch (PDOException $e) {
-	print "Erreur !: " . $e->getMessage() . "<br/>";
-	die();
-}
+	$dsn = "mysql:host=mysql;dbname=dbs2172565;charset=utf8";
+	$options = [
+		PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
+		PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
+	];
+	try {
+		$dbh = new PDO($dsn, "root", ".sweetpwd.", $options);
+	} catch (Exception $e) {
+		error_log($e->getMessage());
+		exit('Oups !'); //something a user can understand
+	}
 ?>

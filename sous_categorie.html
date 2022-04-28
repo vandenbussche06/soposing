@@ -76,7 +76,7 @@
 
           let db = event.target.result;
 
-          nro_categorie = sessionStorage.getItem("id_categorie");
+          nro_categorie = parseInt(sessionStorage.getItem("id_categorie"));
 
 
           getCategorieById(db, nro_categorie)
