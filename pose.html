@@ -16,6 +16,11 @@
   <link rel="stylesheet" type="text/css" href="./js/slick/slick-theme.css">
 
   <link rel="stylesheet" href="css/style.css"> 
+
+  
+
+
+  </style>
 </head>
 
 <div id="loader" class="center"></div>
@@ -27,26 +32,12 @@
     <div id='TITRE' class='titre_header'></div>
 </div>
 
-<section id='liste_filtre' class="regular slider">
-    <div style='height:50px;'>
-      <a id="FAMILLE" class="pose_active">FAMILLE</a>
-    </div>
-    <div>
-      <a id="ENFANT_SOLO" class="pose">ENFANT SOLO</a>
-    </div>
-    <div>
-      <a id="ENFANT_2" class="pose">ENFANT_2</a>
-    </div>
-    <div>
-      <a id="ENFANT_2" class="pose">ENFANT_2</a>
-    </div>
-    <div>
-      <a id="ENFANT_2" class="pose">ENFANT_2</a>
-    </div>
+<section id='HomeBanner' class="  slider" style="font-size:18px">
+ 
 </section>
 
 <div>
-    <div >
+    <div>
         <img src="images/IMG-5245-min.jpg" loading="lazy" sizes="100vw" alt="">
         <div id="ID_SELECT" class="selection xx"> </div>
     </div>
@@ -102,6 +93,44 @@
   <script type="text/javascript">
     $(document).on('ready', function() {
 
+
+      var data = {        
+        homebanner: [
+            {
+                id: "WomenFashion",
+                link: "javascript:void(0)",
+                imgurl: "/img/promo/home_banner/homebanner_000000_07242020.png",
+                text: 'ASSIS',
+                seo: ''
+            },
+            {
+                id: "WomenFashion",
+                link: "javascript:void(0)",
+                imgurl: "/img/promo/home_banner/homebanner_000001_07242020.png",
+                text: 'DEBOUT',
+                seo: ''
+            },
+            {
+                id: "WomenFashion",
+                link: "javascript:void(0)",
+                imgurl: "/img/promo/home_banner/homebanner_000002_07242020.png",
+                text: 'ALLONGE',
+                seo: ''
+            },
+            {
+                id: "WomenFashion",
+                link: "javascript:void(0)",
+                imgurl: "/img/promo/home_banner/homebanner_000003_07242020.png",
+                text: 'ABCXXX',
+                seo: ''
+            }]
+    };
+    $('#HomeBanner').slick();
+    var html = '';
+    $.each(data.homebanner, function (index, data) {
+        html += `<div> &nbsp;${this.text} &nbsp;</div>`;
+         $('#HomeBanner').slick('slickAdd', html);
+    });
  
       document.onreadystatechange = function() {
             if (document.readyState !== "complete") {
@@ -150,6 +179,40 @@
           getSousCategorieById(db, nro_sous_categorie)
           .then(function(result){     
             $('#TITRE').html(result.nom_sous_categorie.toUpperCase()); 
+
+            getFiltreById(db)
+            .then(function(result){   
+              $ligne = '';
+              $indice = 1;
+              result.forEach(element => {
+                if ($indice === 1) {
+                  $ligne += `    <div style='height:50px;'>
+                                  <a id="${element.nom_filtre}" class="pose_active">${element.nom_filtre}</a>
+                                </div>`;
+                } else {
+                  $ligne += `    <div>
+                                  <a id="${element.nom_filtre}" class="pose">${element.nom_filtre}</a>
+                                </div>`;
+                }
+                $indice++;
+              });
+              $('#liste_filtre').html($ligne);
+
+              $('.slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 500,
+                fade: true,
+                slide: '> div',
+                cssEase: 'linear'
+              });
+
+
+              
+            })
+            .catch(function(result){   
+              console.log('KOX' + result);
+            });
 
             getPoseById(db)
             .then(function(result){   
@@ -231,7 +294,40 @@
         });
     }
 
+    //* ----------------------------------------------------------------------------------------------------
+    //* Accès aux informations "categorie" par le numéroi d'index
+    //*
+    //* Paramètres : nom de la base de données et id de la catégorie
+    //* ----------------------------------------------------------------------------------------------------
 
+    async function getFiltreById(db){
+        return new Promise(function(resolve, reject){
+          
+            liste_filtre = [];
+          
+            const txn   = db.transaction('filtre', 'readonly');
+            const store = txn.objectStore('filtre');
+            
+            // return the result object on success
+            var request = store.openCursor();
+            request.onsuccess = function(event) {
+              var cursor = event.target.result;
+              if(cursor) {
+                  let filtre = {
+                      id_filtre         : cursor.value.id_filtre,
+                      id_sous_categorie : cursor.value.id_sous_categorie,
+                      nom_filtre        : cursor.value.nom_filtre,
+                      actif_filtre      : cursor.value.actif_filtre 
+                  }
+                  liste_filtre.push(filtre);
+                  cursor.continue();
+              } else {
+                console.table(liste_filtre);
+                resolve(liste_filtre);
+              }
+            };
+        });
+    }
       $(".regular").slick({
         dots: false,
         infinite: true,
