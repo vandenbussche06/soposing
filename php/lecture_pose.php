@@ -19,11 +19,10 @@ $date_heure = $_GET['dthr_synchro'];
 $select                          = [];
 $select["CODE_RETOUR"]           = '';
 $select["PARAMETRE"]             = '';
-$select["LISTE_SOUS_CATEGORIES"] = NULL;
 $select["MESSAGE_RETOUR"]        = '';
-$select["NB_RECORD"]    = 0;
+$select["NB_RECORD"]             = 0;
 
-$query = "SELECT `id_pose`, `photo_pose`, `commentaire`, `favori`, `id_filtre`, `id_sous_categorie` FROM `pose` LIMIT 10";
+$query = "SELECT `id_pose`, `photo_pose`, `commentaire`, `favori`, `id_filtre`, `id_sous_categorie`, `actif_pose`, `dt_maj_pose` FROM `pose`  WHERE `dt_maj_pose` >= '$date_heure' LIMIT 10";
  
 try {
     $stmt = $dbh->prepare($query);

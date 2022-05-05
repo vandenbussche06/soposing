@@ -24,10 +24,11 @@
                <thead>
                   <tr>
                      <th scope="col" class="col-1">#</th>
+                     <th scope="col" class="col-3">Categorie</th>
                      <th scope="col" class="col-3">Nom</th>
                      <th scope="col" class="col-2">Image</th>
                      <th scope="col" class="col-2">Date</th>
-                     <th scope="col" class="col-2">Actif</th>
+                     <th scope="col" class="col-1">Actif</th>
                      <th scope="col" colspan="3" class="col-2">Actions</th>
                   </tr>
                </thead>
@@ -348,6 +349,7 @@
                         data.LISTE.forEach(element => {
                          $ligne  += `<tr>
                                        <th>${element.id_categorie}</th>
+                                       <td><img style='width:60px' src="data:image/png;base64,${element.photo_categorie}"/></td>
                                        <td>${element.nom_categorie}</td>
                                        <td>Oui</td>
                                        <td>${element.dt_maj_categorie}</td>
@@ -412,7 +414,8 @@
  
              const canvas = document.getElementById('canvas');
              const ctx = canvas.getContext('2d');
-         
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
              let image = document.getElementById('sunset');
              $x = document.getElementById("x").value;
              $x = parseInt($x) ;
@@ -429,7 +432,8 @@
          function maj_cropImg(){
              const canvas = document.getElementById('maj_canvas');
              const ctx = canvas.getContext('2d');
-         
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
              let image = document.getElementById('maj_sunset');
              $x = document.getElementById("maj_x").value;
              $x = parseInt($x) ;

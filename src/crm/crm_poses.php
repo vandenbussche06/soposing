@@ -37,6 +37,7 @@
                 <thead>
                     <tr>
                         <th scope="col" class="col-1">#</th>
+                        <th scope="col" class="col-3">Vignette</th>
                         <th scope="col" class="col-3">Filtre</th>
                         <th scope="col" class="col-3">Favori</th>
                         <th scope="col" class="col-2">Date Maj</th>
@@ -81,6 +82,9 @@
                   </div>
                   <div class="col-6 p-2">
                      <button class='btn btn-success' onclick="cropImg()">Cropper</button>
+                     <button id='sens_horizontal' class='btn' onclick="orientation('horizontal')">Horizontal</button>
+                     <button id='sens_vertical' class='btn btn-primary' onclick="orientation('vertical')">Vertical</button>
+
                      <label for="name">X</label>
                      <input type="text" id="x" name="x" required value="0" minlength="0" maxlength="100" size="10">
                      <label for="name">Y</label>
@@ -421,6 +425,7 @@
                         data.LISTE.forEach(element => {
                             $ligne  += `<tr>
                                           <th>${element.id_pose}</th>
+                                          <td><img style='width:60px' src="data:image/png;base64,${element.photo_pose}"/></td>
                                           <td>${element.nom_filtre}</td>
                                           <td>${element.favori}</td>
                                           <td>${element.dt_maj_pose}</td>
@@ -488,10 +493,9 @@
 
              const canvas = document.getElementById('canvas');
              const ctx = canvas.getContext('2d');
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
              let image = document.getElementById('sunset');
-
-             alert(image.width + ' ' + image.height);
              var coef = 500 /image.width;
 
              $x = document.getElementById("x").value;
@@ -500,9 +504,14 @@
              $y = document.getElementById("y").value;
              $y = parseInt($y)  ;
              
-             alert(coef);
-             alert(image.height * coef);
-             ctx.drawImage(image, $x, $y,  image.width , image.height , 0, 0, image.width * coef, image.height * coef);
+             $sens = localStorage.getItem('sens');
+
+             if ($sens === 'horizontal') {
+               ctx.drawImage(image, $x, $y,  image.width , image.height , 0, 0, image.width * coef, image.height * coef);
+             } else
+             {
+               ctx.drawImage(image, $x, $y,  image.height,  image.width , 0, 0, image.height * coef, image.width * coef);
+             }
          
              var base64 = getBase64Image(document.getElementById("canvas"));
              document.getElementById("base64").innerHTML = base64; 
@@ -511,6 +520,7 @@
          function maj_cropImg(){
              const canvas = document.getElementById('maj_canvas');
              const ctx = canvas.getContext('2d');
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
          
              let image = document.getElementById('maj_sunset');
              $x = document.getElementById("maj_x").value;
@@ -665,6 +675,27 @@
                  }
              }
          });
+         }
+
+         /* -------------------------------------------------------------------- */
+         /* Detection du sens du cropp / hozontal ou vertical                    */
+         /* -------------------------------------------------------------------- */
+
+         function orientation($sens) {
+            localStorage.setItem('sens', $sens);
+
+            switch ($sens) {
+               case 'horizontal':
+                  $('#sens_vertical').removeClass('btn-primary');
+                  $('#sens_horizontal').addClass("btn-primary");
+                  
+                  break;
+               case 'vertical':
+                  $('#sens_horizontal').removeClass('btn-primary');
+                  $('#sens_vertical').addClass("btn-primary");
+               default:
+                  break;
+            }
          }
 
 
