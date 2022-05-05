@@ -23,6 +23,7 @@ $select["LISTE_CATEGORIES"] = NULL;
 $select["MESSAGE_RETOUR"]   = '';
 $select["NB_CATEGORIES"]    = 0;
 
+date_default_timezone_set('Europe/Paris');
 $date_heure_jour = date('Y-m-d H:i:s');
 
 $query = "UPDATE `sous_categorie` SET  actif_sous_categorie = !actif_sous_categorie, `dt_maj_sous_categorie` = '$date_heure_jour' WHERE `id_sous_categorie` = '$id_sous_categorie'";

@@ -14,6 +14,7 @@ $id_sous_categorie       = $_POST['id_sous_categorie'];
 $id_filtre               = $_POST['id_filtre'];
 $nom_filtre              = $_POST['nom_filtre'];
 $photo_pose              = $_POST['photo_pose'];
+$photo_pose              = str_replace(' ', '+', $photo_pose);
 
 // ----------------------------------------------------------------------
 // Initialisation des variables de sortie de la procédure
@@ -24,7 +25,8 @@ $select["CODE_RETOUR"]      = '';
 $select["PARAMETRE"]        = '';
 $select["MESSAGE_RETOUR"]   = '';
  
-$date_heure_jour = date('Y-m-d H:m:s');
+date_default_timezone_set('Europe/Paris');
+$date_heure_jour = date('Y-m-d H:i:s');
 
 if ($id_filtre === '-1') {
     $query = "INSERT INTO `filtre`( `nom_filtre`, `id_sous_categorie`) VALUES ('$nom_filtre','$id_sous_categorie')";

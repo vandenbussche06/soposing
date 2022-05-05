@@ -25,7 +25,9 @@ $select["CODE_RETOUR"]      = '';
 $select["PARAMETRE"]        = '';
 $select["MESSAGE_RETOUR"]   = '';
  
+date_default_timezone_set('Europe/Paris');
 $date_heure_jour = date('Y-m-d H:i:s');
+
 $query = "UPDATE `pose` SET `id_filtre`='$id_filtre', `photo_pose`='$photo_pose', `dt_maj_pose`='$date_heure_jour' WHERE `id_pose`=$id_pose";
 try {
     $stmt = $dbh->prepare($query);

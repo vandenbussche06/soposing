@@ -23,8 +23,10 @@ $select                     = [];
 $select["CODE_RETOUR"]      = '';
 $select["PARAMETRE"]        = '';
 $select["MESSAGE_RETOUR"]   = '';
- 
+
+date_default_timezone_set('Europe/Paris');
 $date_heure_jour = date('Y-m-d H:i:s');
+
 $query = "UPDATE `categorie` SET `nom_categorie`='$nom_categorie',`photo_categorie`='$photo_categorie',`dt_maj_categorie`='$date_heure_jour' WHERE `id_categorie`=$id_categorie";
 try {
     $stmt = $dbh->prepare($query);

@@ -86,12 +86,12 @@
                      <label for="name">Y</label>
                      <input type="text" id="y" name="y" required value="0" minlength="0" maxlength="100" size="10">
                      <div class='border'>
-                        <canvas id="canvas" width='747px' height='299px'>
+                        <canvas id="canvas" width='500px' height='700px'>
                         </canvas>
                      </div>
                   </div>
                </div>
-               <div class='row' style="display: none;">
+               <div class='row' style="display: block;">
                   <textarea id='base64'></textarea> 
                </div>
                <button id='btn_confirmer_ajout' class="btn btn-success">Confirmer</button>
@@ -157,9 +157,9 @@
       <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
       <script>
 
-         /* -------------------------------------------------------------------- */
-         /* Génération des listes catégories et sous catégories par defaut       */
-         /* -------------------------------------------------------------------- */
+         /* -------------------------------------------------------------------------- */
+         /* Génération des listes catégories, sous catégories et des poses par defaut  */
+         /* -------------------------------------------------------------------------- */
 
          form_select_categorie();
 
@@ -174,6 +174,7 @@
          const select_categorie = document.getElementById("select_categorie");
          select_categorie.addEventListener("change", function() {
             form_select_sous_categorie($('#select_categorie').val());
+            liste_poses($('#select_sous_categorie').val());
          });
 
          const select_sous_categorie = document.getElementById("select_sous_categorie");
@@ -232,7 +233,7 @@
             $erreur = '';
 
             if ($('#select_filtre').val() === -1){
-               if ($('#nom_filtre').val()==='') {
+               if ($('#nom_filtre').val() === '') {
                   $erreur = 'Le nom du filtre est obligatoire';
                   alert($erreur);
                } 
@@ -244,12 +245,17 @@
             } 
 
             if ($erreur === '') {
-
+               var $nom_filtre = '';
                $id_sous_categorie = $('#id_sous_categorie').val();
+               if ($('#select_filtre').val() == -1) {
+                  $nom_filtre = $('#nom_filtre').val();
+               } else {
+                  $nom_filtre = $('#select_filtre option:selected').text();
+                }
  
                $.ajax({
-                        url: 'php/ajout_pose.php',
-                        data: 'id_sous_categorie=' + $id_sous_categorie + '&id_filtre=' + $('#select_filtre').val() + '&nom_filtre=' + $('#nom_filtre').val()+ '&photo_pose=' + $('#base64').val(),
+                        url: '../../php/ajout_pose.php',
+                        data: 'id_sous_categorie=' + $id_sous_categorie + '&id_filtre=' + $('#select_filtre').val() + '&nom_filtre=' + $nom_filtre + '&photo_pose=' + $('#base64').val(),
                         type : 'POST',
                         dataType: 'json',
                         async: true,
@@ -301,7 +307,7 @@
             $maj_nom_filtre      = $('#maj_nom_filtre');
 
             $.ajax({
-                  url: 'php/maj_pose.php',
+                  url: '../../php/maj_pose.php',
                   data: 'id_pose=' + $('#id_pose').val() + '&id_filtre=' + $maj_select_filtre + '&nom_filtre=' + $maj_nom_filtre + '&maj_photo_pose=' + $('#maj_base64').val(),
                   type : 'POST',
                   dataType: 'json',
@@ -340,7 +346,7 @@
              switch ($choix[0]) {
                case 'M':
                   $.ajax({
-                     url: 'php/edition_pose.php',
+                     url: '../../php/edition_pose.php',
                      data: 'id_pose=' + $choix[1],
                      dataType: 'json',
                      type: 'POST',
@@ -369,7 +375,7 @@
                  break;       
                case 'S':
                    $.ajax({
-                     url: 'php/suppression_pose.php',
+                     url: '../../php/suppression_pose.php',
                      data: 'id_pose=' + $choix[1],
                      dataType: 'json',
                      async: false,
@@ -401,7 +407,7 @@
          function liste_poses($parametre=1) {
 
            $.ajax({
-             url: 'php/lecture_id_pose.php',
+             url: '../../php/lecture_id_pose.php',
              data : 'id_sous_categorie=' + $parametre,
              type : 'POST',
              dataType: 'json',
@@ -447,7 +453,7 @@
 
             $erreur = '';
 
-            if (event.target.files[0].size > 1000000)  {
+            if (event.target.files[0].size > 2000000)  {
                $erreur = 'Le fichier est trop volumineux';
             }
 
@@ -461,6 +467,8 @@
                output.onload = function() {
                   URL.revokeObjectURL(output.src) // free memory
                }
+            } else {
+               alert($erreur);
             }
          };
 
@@ -477,18 +485,24 @@
          /* -------------------------------------------------------------------- */
          
          function cropImg(){
- 
+
              const canvas = document.getElementById('canvas');
              const ctx = canvas.getContext('2d');
-         
+
              let image = document.getElementById('sunset');
+
+             alert(image.width + ' ' + image.height);
+             var coef = 500 /image.width;
+
              $x = document.getElementById("x").value;
              $x = parseInt($x) ;
          
              $y = document.getElementById("y").value;
              $y = parseInt($y)  ;
              
-             ctx.drawImage(image, $x, $y,  747, 299, 0, 0, 747, 299);
+             alert(coef);
+             alert(image.height * coef);
+             ctx.drawImage(image, $x, $y,  image.width , image.height , 0, 0, image.width * coef, image.height * coef);
          
              var base64 = getBase64Image(document.getElementById("canvas"));
              document.getElementById("base64").innerHTML = base64; 
@@ -537,14 +551,13 @@
              return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
          }     
  
-
          /* -------------------------------------------------------------------- */
          /* Liste des catégories / Génération du tableau                         */
          /* -------------------------------------------------------------------- */
          
          function form_select_categorie() {
            $.ajax({
-             url: 'php/liste_categorie.php',
+             url: '../../php/liste_categorie.php',
              dataType: 'json',
              async: false,
              success: function(data) { 
@@ -552,12 +565,11 @@
                      case 'OK':
                        $ligne = '';
                         data.LISTE.forEach(element => {
-                        if ($ligne==='') {
-                           $ligne  += `<option selected value="${element.id_categorie}">${element.nom_categorie}</option>`;
-                        } else {
-                           $ligne  += `<option value="${element.id_categorie}">${element.nom_categorie}</option>`;
-                        }
-                         
+                           if ($ligne==='') {
+                              $ligne  += `<option selected value="${element.id_categorie}">${element.nom_categorie}</option>`;
+                           } else {
+                              $ligne  += `<option value="${element.id_categorie}">${element.nom_categorie}</option>`;
+                           }
                         });
          
                         $('#select_categorie').html($ligne);
@@ -580,7 +592,7 @@
          
          function form_select_sous_categorie($id_categorie) {
            $.ajax({
-             url: 'php/liste_sous_categorie.php',
+             url: '../../php/liste_sous_categorie.php',
              data: 'id_categorie=' + $id_categorie,
              type : 'POST',
              dataType: 'json',
@@ -589,15 +601,16 @@
                  switch (data.CODE_RETOUR) {
                      case 'OK':
                        $ligne = '';
-                        data.LISTE.forEach(element => {
-                           if ($ligne==='') {
-                              $ligne  += `<option selected value="${element.id_sous_categorie}">${element.nom_sous_categorie}</option>`;
-                           } else {
-                              $ligne  += `<option value="${element.id_sous_categorie}">${element.nom_sous_categorie}</option>`;
-                           }
-                        });
-         
-                        $('#select_sous_categorie').html($ligne);
+                       if (data.LISTE != null) {
+                           data.LISTE.forEach(element => {
+                              if ($ligne==='') {
+                                 $ligne  += `<option selected value="${element.id_sous_categorie}">${element.nom_sous_categorie}</option>`;
+                              } else {
+                                 $ligne  += `<option value="${element.id_sous_categorie}">${element.nom_sous_categorie}</option>`;
+                              }
+                           });
+                       }
+                       $('#select_sous_categorie').html($ligne);
            
                          break;
                      case 'ANOMALIE':
@@ -617,7 +630,7 @@
          
          function form_select_filtre($id_sous_categorie, $mode) {
            $.ajax({
-             url: 'php/lecture_id_filtre.php',
+             url: '../../php/lecture_id_filtre.php',
              data: 'id_sous_categorie=' + $id_sous_categorie,
              type : 'POST',
              dataType: 'json',
@@ -627,14 +640,16 @@
                      case 'OK':
                         $ligne  = `<option selected value="-1">Nouveau</option>`;
 
-                        data.LISTE.forEach(element => {
-                           if ($ligne==='') {
-                              $ligne  += `<option selected value="${element.id_filtre}">${element.nom_filtre}</option>`;
-                           } else {
-                              $ligne  += `<option value="${element.id_filtre}">${element.nom_filtre}</option>`;
-                           }
-                        });
-         
+                        if (data.LISTE != null) {
+                           data.LISTE.forEach(element => {
+                              if ($ligne==='') {
+                                 $ligne  += `<option selected value="${element.id_filtre}">${element.nom_filtre}</option>`;
+                              } else {
+                                 $ligne  += `<option value="${element.id_filtre}">${element.nom_filtre}</option>`;
+                              }
+                           });
+                        }
+
                          if ($mode === 'AJOUT') {
                            $('#select_filtre').html($ligne);
                         } else {

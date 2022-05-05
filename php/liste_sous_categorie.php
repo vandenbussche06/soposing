@@ -23,7 +23,7 @@ $select["LISTE"]            = NULL;
 $select["MESSAGE_RETOUR"]   = '';
 $select["COMPTAGE"]         = 0;
 
-$query = "SELECT `id_sous_categorie`, `nom_sous_categorie`, `photo_sous_categorie`, `actif_sous_categorie`, `dt_maj_sous_categorie` FROM `sous_categorie` WHERE `id_categorie`='$id_categorie' ORDER BY `id_categorie`";
+$query = "SELECT `id_sous_categorie`, `nom_sous_categorie`, `photo_sous_categorie`, `actif_sous_categorie`, `dt_maj_sous_categorie` FROM `sous_categorie` WHERE `id_categorie`='$id_categorie'  ORDER BY `id_categorie`";
 
 try {
     $stmt = $dbh->prepare($query);

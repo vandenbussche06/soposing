@@ -17,7 +17,7 @@ $select["LISTE"]            = NULL;
 $select["MESSAGE_RETOUR"]   = '';
 $select["NB_RECORD"]        = 0;
 
-$query = "SELECT `id_categorie`, `nom_categorie`, `actif_categorie`, `dt_maj_categorie`, `photo_categorie`  FROM `categorie` ORDER BY `id_categorie`";
+$query = "SELECT `id_categorie`, `nom_categorie`, `actif_categorie`, `dt_maj_categorie`, `photo_categorie`  FROM `categorie` WHERE `actif_categorie` = 1 ORDER BY `id_categorie`";
 
 try {
     $stmt = $dbh->prepare($query);

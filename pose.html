@@ -15,11 +15,7 @@
   <link rel="stylesheet" type="text/css" href="./js/slick/slick.css">
   <link rel="stylesheet" type="text/css" href="./js/slick/slick-theme.css">
 
-  <link rel="stylesheet" href="css/style.css"> 
-
-  
-
-
+  <link rel="stylesheet" href="css/pose.css"> 
   </style>
 </head>
 
@@ -28,24 +24,15 @@
 <body class="body">
 
 <div class='header'>
-    <div id='BTN_BACK' class='back'></div>
-    <div id='TITRE' class='titre_header'></div>
+    <div id='btn_back' class='back'></div>
+    <div id='titre' class='header titre'></div>
 </div>
 
-<section id='HomeBanner' class="  slider" style="font-size:18px">
- 
+<section id='liste_filtres' class="slider" style="font-size:18px; width:100%"></section>
+
+<section>
+  <div id="liste_poses" style="width:100%"></div>
 </section>
-
-<div>
-    <div>
-        <img src="images/IMG-5245-min.jpg" loading="lazy" sizes="100vw" alt="">
-        <div id="ID_SELECT" class="selection xx"> </div>
-    </div>
-    <div >
-      <img src="images/IMG-5245-min.jpg" loading="lazy" sizes="100vw" alt="">
-      <div id="ID_SELECT" class="selection xx"> </div>
-  </div>
-</div>
 
 <section class='footer'>
   <div class='croix'>
@@ -56,8 +43,8 @@
       </svg>
   </div>
   <div class='flex-container'>
-       <div class='flex-item-left'>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+       <div class='flex-item-left' id="btn_home">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" >
           <rect width="40" height="40" fill="#F3E9DC"/>
           <path d="M37.4555 19.2111L20.7888 2.54445C20.5807 2.3375 20.299 2.22134 20.0055 2.22134C19.712 2.22134 19.4304 2.3375 19.2222 2.54445L2.5555 19.2111C2.37348 19.4237 2.27836 19.6971 2.28916 19.9767C2.29996 20.2564 2.41588 20.5216 2.61377 20.7195C2.81165 20.9174 3.07692 21.0333 3.35656 21.0441C3.6362 21.0549 3.90961 20.9598 4.12217 20.7778L20 4.9L35.8777 20.7889C36.0903 20.9709 36.3637 21.066 36.6433 21.0552C36.923 21.0444 37.1882 20.9285 37.3861 20.7306C37.584 20.5327 37.6999 20.2675 37.7107 19.9878C37.7215 19.7082 37.6264 19.4348 37.4444 19.2222L37.4555 19.2111Z" fill="#473229"/>
           <path d="M31.1111 35.5556H25.5555V24.4444H14.4444V35.5556H8.88885V20L6.66663 22.2222V35.5556C6.66663 36.1449 6.90075 36.7102 7.3175 37.1269C7.73425 37.5437 8.29948 37.7778 8.88885 37.7778H16.6666V26.6667H23.3333V37.7778H31.1111C31.7004 37.7778 32.2657 37.5437 32.6824 37.1269C33.0992 36.7102 33.3333 36.1449 33.3333 35.5556V21.9556L31.1111 19.7333V35.5556Z" fill="#473229"/>
@@ -76,299 +63,22 @@
           <path d="M19.9999 18.75C19.6684 18.75 19.3505 18.8817 19.1161 19.1161C18.8816 19.3505 18.7499 19.6685 18.7499 20C18.7499 20.3315 18.8816 20.6495 19.1161 20.8839C19.3505 21.1183 19.6684 21.25 19.9999 21.25C20.3315 21.25 20.6494 21.1183 20.8838 20.8839C21.1182 20.6495 21.2499 20.3315 21.2499 20C21.2499 19.6685 21.1182 19.3505 20.8838 19.1161C20.6494 18.8817 20.3315 18.75 19.9999 18.75ZM14.9999 18.75C14.6684 18.75 14.3505 18.8817 14.1161 19.1161C13.8816 19.3505 13.7499 19.6685 13.7499 20C13.7499 20.3315 13.8816 20.6495 14.1161 20.8839C14.3505 21.1183 14.6684 21.25 14.9999 21.25C15.3315 21.25 15.6494 21.1183 15.8838 20.8839C16.1182 20.6495 16.2499 20.3315 16.2499 20C16.2499 19.6685 16.1182 19.3505 15.8838 19.1161C15.6494 18.8817 15.3315 18.75 14.9999 18.75ZM24.9999 18.75C24.6684 18.75 24.3505 18.8817 24.1161 19.1161C23.8816 19.3505 23.7499 19.6685 23.7499 20C23.7499 20.3315 23.8816 20.6495 24.1161 20.8839C24.3505 21.1183 24.6684 21.25 24.9999 21.25C25.3315 21.25 25.6494 21.1183 25.8838 20.8839C26.1182 20.6495 26.2499 20.3315 26.2499 20C26.2499 19.6685 26.1182 19.3505 25.8838 19.1161C25.6494 18.8817 25.3315 18.75 24.9999 18.75ZM32.3583 8.81668C26.1833 1.99168 15.6416 1.46668 8.81661 7.64001C1.99161 13.815 1.46661 24.3567 7.63995 31.1817L3.57661 35.2433C3.45977 35.3599 3.38016 35.5085 3.34788 35.6704C3.3156 35.8322 3.33211 36 3.3953 36.1525C3.4585 36.3049 3.56554 36.4352 3.70286 36.5267C3.84017 36.6183 4.00158 36.667 4.16661 36.6667H19.9999C24.1324 36.6665 28.1174 35.131 31.1816 32.3583C38.0083 26.1833 38.5349 15.6417 32.3583 8.81668ZM19.9999 35H6.17828L9.39328 31.785C9.5495 31.6287 9.63727 31.4168 9.63727 31.1958C9.63727 30.9749 9.5495 30.763 9.39328 30.6067C7.29599 28.5092 5.86771 25.837 5.28901 22.9279C4.71032 20.0188 5.00719 17.0034 6.14211 14.2629C7.27702 11.5225 9.199 9.18016 11.6651 7.53198C14.1311 5.88381 17.0305 5.00384 19.9966 5.00335C23.9744 5.0029 27.7895 6.58266 30.6025 9.39508C33.4156 12.2075 34.9962 16.0222 34.9966 20C34.9971 23.9778 33.4173 27.7929 30.6049 30.6059C27.7925 33.419 23.9777 34.9996 19.9999 35Z" fill="#473229"/>
           </svg>          
       </div>
-      <div class='flex-item-right'>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" fill="#F3E9DC"/>
-          <path d="M20 36.0333C19.7545 36.0326 19.5162 35.9505 19.3222 35.8C13.1445 31 8.8889 26.8667 5.91113 22.7889C2.11113 17.5778 1.24446 12.7667 3.33335 8.4889C4.82224 5.43334 9.10002 2.93334 14.1 4.3889C16.4839 5.0775 18.5639 6.55422 20 8.57779C21.4361 6.55422 23.5161 5.0775 25.9 4.3889C30.8889 2.95557 35.1778 5.43334 36.6667 8.4889C38.7556 12.7667 37.8889 17.5778 34.0889 22.7889C31.1111 26.8667 26.8556 31 20.6778 35.8C20.4838 35.9505 20.2455 36.0326 20 36.0333V36.0333ZM11.2556 6.20001C10.0659 6.15371 8.88598 6.43229 7.84262 7.00584C6.79926 7.5794 5.93179 8.42628 5.33335 9.45557C3.61113 12.9889 4.3889 16.9222 7.71113 21.4667C11.2418 26.0207 15.376 30.0727 20 33.5111C24.6233 30.0761 28.7575 26.0278 32.2889 21.4778C35.6222 16.9222 36.3889 12.9889 34.6667 9.46668C33.5556 7.24446 30.2222 5.47779 26.5111 6.52223C25.3212 6.8739 24.218 7.47081 23.2727 8.27454C22.3273 9.07827 21.5608 10.071 21.0222 11.1889C20.9385 11.3927 20.7961 11.567 20.6131 11.6897C20.4301 11.8123 20.2148 11.8778 19.9945 11.8778C19.7741 11.8778 19.5588 11.8123 19.3758 11.6897C19.1928 11.567 19.0504 11.3927 18.9667 11.1889C18.4322 10.0682 17.6669 9.07315 16.721 8.26892C15.7751 7.46469 14.6699 6.86945 13.4778 6.52223C12.7555 6.31246 12.0077 6.20401 11.2556 6.20001V6.20001Z" fill="#473229"/>
-          </svg>
-          
+      <div class='flex-item-right'  >
+        <img id="btn_favori" src="images/coeur_off.png" style="width:40px; height:40px" alt="">
+    
       </div>
   </div>
 </section>
 
   <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=601411f9821657146748f826" type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
-   <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+  <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
   <script src="./js/slick/slick.js" type="text/javascript" charset="utf-8"></script>
-  <script type="text/javascript">
-    $(document).on('ready', function() {
+  
+  <!-- ----------------------------------------------------------------------------------------
+      Module js/sous_categorie.js
+  --------------------------------------------------------------------------------------------- --> 
 
-
-      var data = {        
-        homebanner: [
-            {
-                id: "WomenFashion",
-                link: "javascript:void(0)",
-                imgurl: "/img/promo/home_banner/homebanner_000000_07242020.png",
-                text: 'ASSIS',
-                seo: ''
-            },
-            {
-                id: "WomenFashion",
-                link: "javascript:void(0)",
-                imgurl: "/img/promo/home_banner/homebanner_000001_07242020.png",
-                text: 'DEBOUT',
-                seo: ''
-            },
-            {
-                id: "WomenFashion",
-                link: "javascript:void(0)",
-                imgurl: "/img/promo/home_banner/homebanner_000002_07242020.png",
-                text: 'ALLONGE',
-                seo: ''
-            },
-            {
-                id: "WomenFashion",
-                link: "javascript:void(0)",
-                imgurl: "/img/promo/home_banner/homebanner_000003_07242020.png",
-                text: 'ABCXXX',
-                seo: ''
-            }]
-    };
-    $('#HomeBanner').slick();
-    var html = '';
-    $.each(data.homebanner, function (index, data) {
-        html += `<div> &nbsp;${this.text} &nbsp;</div>`;
-         $('#HomeBanner').slick('slickAdd', html);
-    });
- 
-      document.onreadystatechange = function() {
-            if (document.readyState !== "complete") {
-                document.querySelector(
-                  "body").style.visibility = "hidden";
-                document.querySelector(
-                  "#loader").style.visibility = "visible";
-            } else {
-                document.querySelector(
-                  "#loader").style.display = "none";
-                document.querySelector(
-                  "body").style.visibility = "visible";
-            }
-        };
-        
-        //* ----------------------------------------------------------------------------------------------------
-        //* Test si IndexDB est supporté par le navigateur
-        //* ----------------------------------------------------------------------------------------------------
-
-        if (!window.indexedDB) {
-            console.log(`IndexedDB non supporté par le navigateur`);
-            window.location.href = 'anomalie_indexeddb.html';
-        } else {
-            console.log(`IndexedDB supporté par le navigateur`);                 
-        }
-
-        //* ----------------------------------------------------------------------------------------------------
-        //* Ouverture de la base de données SO POSING
-        //*
-        //* La méthode open() renvoie un objet de requête qui est une instance de l' IDBOpenDBRequest interface.
-        //* ----------------------------------------------------------------------------------------------------
-
-        const request = indexedDB.open('SOPOSING', 1);
-
-        //* Détection d'une erreur sur l'ouverture de la base de données
-        request.onerror = (event) => {
-            console.error(`Erreur sur l'ouverture : ${event.target.errorCode}`);
-        };
-
-        //* La base de données est ouverte
-        request.onsuccess = (event) => {
-
-          let db = event.target.result;
-          nro_sous_categorie = sessionStorage.getItem("id_sous_categorie");
-
-          getSousCategorieById(db, nro_sous_categorie)
-          .then(function(result){     
-            $('#TITRE').html(result.nom_sous_categorie.toUpperCase()); 
-
-            getFiltreById(db)
-            .then(function(result){   
-              $ligne = '';
-              $indice = 1;
-              result.forEach(element => {
-                if ($indice === 1) {
-                  $ligne += `    <div style='height:50px;'>
-                                  <a id="${element.nom_filtre}" class="pose_active">${element.nom_filtre}</a>
-                                </div>`;
-                } else {
-                  $ligne += `    <div>
-                                  <a id="${element.nom_filtre}" class="pose">${element.nom_filtre}</a>
-                                </div>`;
-                }
-                $indice++;
-              });
-              $('#liste_filtre').html($ligne);
-
-              $('.slider').slick({
-                dots: true,
-                infinite: true,
-                speed: 500,
-                fade: true,
-                slide: '> div',
-                cssEase: 'linear'
-              });
-
-
-              
-            })
-            .catch(function(result){   
-              console.log('KOX' + result);
-            });
-
-            getPoseById(db)
-            .then(function(result){   
- 
-              result.forEach(element => {
-                console.log('*** !' + element.id_pose); 
-              });
-            })
-            .catch(function(result){   
-              console.log('KOX' + result);
-            });
-          })
-          .catch(function(result){   
-            console.log('KO');
-          });
-        };
-
-    //* ----------------------------------------------------------------------------------------------------
-    //* Accès aux informations "categorie" par le numéroi d'index
-    //*
-    //* Paramètres : nom de la base de données et id de la catégorie
-    //* ----------------------------------------------------------------------------------------------------
-
-    async function getSousCategorieById(db, id){
-        return new Promise(function(resolve, reject){
-          
-            const txn   = db.transaction('sous_categorie', 'readonly');
-            const store = txn.objectStore('sous_categorie');
-
-            var id_num = parseInt(id);
-            let query   = store.get(id_num);
-        
-            query.onsuccess = (event) => {
-              if (typeof event.target.result === 'object') {
-                  resolve(event.target.result);                    
-              } else {
-                  reject("Sous categorie not found");     
-              }
-            };
-        
-            query.onerror = (event) => {
-                reject(event.target.errorCode);
-            }
-        });
-    }
-
-    //* ----------------------------------------------------------------------------------------------------
-    //* Accès aux informations "categorie" par le numéroi d'index
-    //*
-    //* Paramètres : nom de la base de données et id de la catégorie
-    //* ----------------------------------------------------------------------------------------------------
-
-    async function getPoseById(db){
-        return new Promise(function(resolve, reject){
-          
-            liste = [];
-          
-            const txn   = db.transaction('pose', 'readonly');
-            const store = txn.objectStore('pose');
-            
-            // return the result object on success
-            var request = store.openCursor();
-            request.onsuccess = function(event) {
-              var cursor = event.target.result;
-              if(cursor) {
-                  let pose = {
-                      id_pose           : cursor.value.id_pose,
-                      id_sous_categorie : cursor.value.id_sous_categorie,
-                      favori            : cursor.value.favori,
-                      photo_pose        : cursor.value.photo_pose 
-                  }
-                  liste.push(pose);
-                  cursor.continue();
-              } else {
-                console.table(liste);
-                resolve(liste);
-              }
-            };
-        });
-    }
-
-    //* ----------------------------------------------------------------------------------------------------
-    //* Accès aux informations "categorie" par le numéroi d'index
-    //*
-    //* Paramètres : nom de la base de données et id de la catégorie
-    //* ----------------------------------------------------------------------------------------------------
-
-    async function getFiltreById(db){
-        return new Promise(function(resolve, reject){
-          
-            liste_filtre = [];
-          
-            const txn   = db.transaction('filtre', 'readonly');
-            const store = txn.objectStore('filtre');
-            
-            // return the result object on success
-            var request = store.openCursor();
-            request.onsuccess = function(event) {
-              var cursor = event.target.result;
-              if(cursor) {
-                  let filtre = {
-                      id_filtre         : cursor.value.id_filtre,
-                      id_sous_categorie : cursor.value.id_sous_categorie,
-                      nom_filtre        : cursor.value.nom_filtre,
-                      actif_filtre      : cursor.value.actif_filtre 
-                  }
-                  liste_filtre.push(filtre);
-                  cursor.continue();
-              } else {
-                console.table(liste_filtre);
-                resolve(liste_filtre);
-              }
-            };
-        });
-    }
-      $(".regular").slick({
-        dots: false,
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 3
-      });
-      $('.blk_text_over').toggle();
-      $('.blk_image').hide();
-      $("#MENU_TITRE").click(function() {
-        $('.contener').toggle();
-      });
-      $("#FAMILLE").click(function() {
-        $('.blk_image').hide();
-        $('.famille').show();
-      });
-      $("#ENFANT_2").click(function() {
-        $('.blk_image').hide();
-        $('.enfant_2').show();
-      });
-            $("#ENFANT_SOLO").click(function() {
-        $('.blk_image').hide();
-        $('.enfant_solo').show();
-      });
-        $(".btn_text_info")
-        .click(function() {
-        $('.blk_text_over').toggle();
-       });
-
-        //* ----------------------------------------------------------------------------------------------------
-        //* Détection du click sur le bouton BACK
-        //* ----------------------------------------------------------------------------------------------------
-
-        document.getElementById('BTN_BACK').onclick = function(event) {
-          window.location = 'sous_categorie.html';
-        }
-
-        document.getElementById('liste_filtre').onclick = function(event) {
-          alert(event.target.id);
-        }
-
-    });
-</script>
+  <script type="text/javascript" src="js/pose.js"></script>
 </body>
-</html>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

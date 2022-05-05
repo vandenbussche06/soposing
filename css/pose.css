@@ -3,6 +3,41 @@
     Déclaration des variables 
 ------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------  
+    Reinitialisation du CSS 
+------------------------------------------------------------------------------------------ */
+a, abbr, acronym, address, applet, article, aside, audio,
+b, blockquote, big, body,
+center, canvas, caption, cite, code, command,
+datalist, dd, del, details, dfn, dl, div, dt,
+em, embed,
+fieldset, figcaption, figure, font, footer, form,
+h1, h2, h3, h4, h5, h6, header, hgroup, html,
+i, iframe, img, ins,
+kbd,
+keygen,
+label, legend, li,
+meter,
+nav,
+object, ol, output,
+p, pre, progress,
+q,
+s, samp, section, small, span, source, strike, strong, sub, sup,
+table, tbody, tfoot, thead, th, tr, tdvideo, tt,
+u, ul,
+var {
+  background: transparent;
+  font-size: 100%;
+  border: 0 none;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------------------------------  
     Gestion du loader  
 ------------------------------------------------------------------------------------------ */
 #loader {
@@ -26,30 +61,6 @@
   left: 0;
   right: 0;
   margin: auto;
-}
-
-/* ------------------------------------------------------------------------------------------  
-    Menu 
-  ------------------------------------------------------------------------------------------ */
-.bg_illustration {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-}
-
-.shape {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  min-width: 100%;
-}
-
-.btn_poses {
-  position: fixed;
-  bottom: 230px;
-  right: 40px;
 }
 
 /* ------------------------------------------------------------------------------------------  
@@ -89,8 +100,7 @@
   opacity: 0.6;
   filter: grayscale(100%);
 }
-
-.overlay_light {
+.overlay .light {
   position: absolute;
   top: 0;
   width: 100%;
@@ -98,27 +108,6 @@
   z-index: 1;
   background-color: black;
   opacity: 0.2;
-}
-
-/* ------------------------------------------------------------------------------------------  
-/* Titre sur les catégorie et sous catégorie 
-/* ------------------------------------------------------------------------------------------ */
-.titre {
-  position: absolute;
-  font-family: "Dancing Script", cursive;
-  z-index: 2;
-}
-
-.categorie, .sous_categorie {
-  position: relative;
-  width: 100%;
-  height: 180px;
-  border-bottom: 5px solid #F3E9DC;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #F3E9DC;
-  font-size: 40px;
 }
 
 /* ------------------------------------------------------------------------------------------  
@@ -164,14 +153,14 @@
 
 .flex-item-left {
   flex: 15%;
-  text-align: left;
+  text-align: "left";
   margin-left: 20px;
 }
 
 .flex-item-right {
   flex: 15%;
-  text-align: right;
-  margin-right: 20px;
+  text-align: "right";
+  margin-left: 20px;
 }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=pose.css.map */

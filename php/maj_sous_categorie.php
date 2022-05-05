@@ -25,7 +25,9 @@ $select["CODE_RETOUR"]      = '';
 $select["PARAMETRE"]        = '';
 $select["MESSAGE_RETOUR"]   = '';
  
+date_default_timezone_set('Europe/Paris');
 $date_heure_jour = date('Y-m-d H:i:s');
+
 $query = "UPDATE `sous_categorie` SET `nom_sous_categorie`='$nom_sous_categorie', `photo_sous_categorie`='$photo_sous_categorie', `dt_maj_sous_categorie`='$date_heure_jour' WHERE `id_sous_categorie`=$id_sous_categorie";
 try {
     $stmt = $dbh->prepare($query);

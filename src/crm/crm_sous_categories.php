@@ -211,7 +211,7 @@
                $nom_sous_categorie = toTitles($('#nom_sous_categorie').val());
 
                $.ajax({
-                        url: 'php/ajout_sous_categorie.php',
+                        url: '../../php/ajout_sous_categorie.php',
                         data: 'id_categorie=' + $id_categorie + '&nom_sous_categorie=' + $nom_sous_categorie + '&photo_sous_categorie=' + $('#base64').val(),
                         type : 'POST',
                         dataType: 'json',
@@ -263,7 +263,7 @@
             $nom_categorie = toTitles($('#maj_nom_sous_categorie').val());
 
             $.ajax({
-                  url: 'php/maj_sous_categorie.php',
+                  url: '../../php/maj_sous_categorie.php',
                   data: 'id_sous_categorie=' + $('#id_sous_categorie').val() + '&nom_sous_categorie=' + $nom_categorie + '&photo_sous_categorie=' + $('#maj_base64').val(),
                   type : 'POST',
                   dataType: 'json',
@@ -302,7 +302,7 @@
              switch ($choix[0]) {
                case 'M':
                   $.ajax({
-                     url: 'php/lecture_id_sous_categorie.php',
+                     url: '../../php/lecture_id_sous_categorie.php',
                      data: 'id_sous_categorie=' + $choix[1],
                      dataType: 'json',
                      async: false,
@@ -327,7 +327,7 @@
                  break;       
                case 'S':
                    $.ajax({
-                     url: 'php/suppression_sous_categorie.php',
+                     url: '../../php/suppression_sous_categorie.php',
                      data: 'id_sous_categorie=' + $choix[1],
                      dataType: 'json',
                      async: false,
@@ -359,7 +359,7 @@
          function liste_sous_categorie($parametre=1) {
 
            $.ajax({
-             url: 'php/liste_sous_categorie.php',
+             url: '../../php/liste_sous_categorie.php',
              data : 'id_categorie=' + $parametre,
              type : 'POST',
              dataType: 'json',
@@ -508,7 +508,7 @@
          
          function liste_categorie() {
            $.ajax({
-             url: 'php/liste_categorie.php',
+             url: '../../php/liste_categorie.php',
              dataType: 'json',
              type : 'POST',
              async: false,

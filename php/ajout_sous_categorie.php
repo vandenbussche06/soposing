@@ -23,9 +23,11 @@ $select                     = [];
 $select["CODE_RETOUR"]      = '';
 $select["PARAMETRE"]        = '';
 $select["MESSAGE_RETOUR"]   = '';
- 
-$date_heure_jour = date('Y-m-d H:m:s');
-$query = "INSERT INTO `sous_categorie`( `nom_sous_categorie`, `photo_sous_categorie`, `id_categorie`, `actif_sous_categorie`, `dt_maj_sous_categorie`) VALUES ('$nom_sous_categorie', '$photo_sous_categorie', '$id_categorie', 0, '$date_heure_jour')";
+
+date_default_timezone_set('Europe/Paris');
+$date_heure_jour = date('Y-m-d H:i:s');
+
+$query = "INSERT INTO `sous_categorie`( `nom_sous_categorie`, `photo_sous_categorie`, `id_categorie`, `actif_sous_categorie`, `dt_maj_sous_categorie`) VALUES ('$nom_sous_categorie', '$photo_sous_categorie', '$id_categorie', 1, '$date_heure_jour')";
 try {
     $stmt = $dbh->prepare($query);
     $stmt->execute();

@@ -189,7 +189,7 @@
                $nom_categorie = toTitles($('#nom_categorie').val());
 
                $.ajax({
-                        url: 'php/ajout_categorie.php',
+                        url: '../../php/ajout_categorie.php',
                         data: 'nom_categorie=' + $nom_categorie + '&photo_categorie=' + $('#base64').val(),
                         type : 'POST',
                         dataType: 'json',
@@ -243,7 +243,7 @@
             $nom_categorie = toTitles($('#maj_nom_categorie').val());
 
             $.ajax({
-                  url: 'php/maj_categorie.php',
+                  url: '../../php/maj_categorie.php',
                   data: 'id_categorie=' + $('#id_categorie').val() + '&maj_nom_categorie=' + $nom_categorie + '&maj_photo_categorie=' + $('#maj_base64').val(),
                   type : 'POST',
                   dataType: 'json',
@@ -282,7 +282,7 @@
              switch ($choix[0]) {
                case 'M':
                   $.ajax({
-                     url: 'php/lecture_id_categorie.php',
+                     url: '../../php/lecture_id_categorie.php',
                      data: 'id_categorie=' + $choix[1],
                      dataType: 'json',
                      async: false,
@@ -307,7 +307,7 @@
                  break;       
                case 'S':
                    $.ajax({
-                     url: 'php/suppression_categorie.php',
+                     url: '../../php/suppression_categorie.php',
                      data: 'id_categorie=' + $choix[1],
                      dataType: 'json',
                      async: false,
@@ -338,7 +338,7 @@
          
          function liste_categorie() {
            $.ajax({
-             url: 'php/liste_categorie.php',
+             url: '../../php/liste_categorie.php',
              dataType: 'json',
              async: false,
              success: function(data) { 

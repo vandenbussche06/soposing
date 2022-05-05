@@ -12,6 +12,7 @@ include 'conn.php';
 
 $nom_categorie      = $_POST['nom_categorie'];
 $photo_categorie    = $_POST['photo_categorie'];
+$photo_categorie    = str_replace(' ', '+', $photo_categorie);
 
 // ----------------------------------------------------------------------
 // Initialisation des variables de sortie de la procédure
@@ -22,7 +23,8 @@ $select["CODE_RETOUR"]      = '';
 $select["PARAMETRE"]        = '';
 $select["MESSAGE_RETOUR"]   = '';
  
-$date_heure_jour = date('Y-m-d H:m:s');
+date_default_timezone_set('Europe/Paris');
+$date_heure_jour = date('Y-m-d H:i:s');
 
 $query = "INSERT INTO categorie( nom_categorie, photo_categorie, dt_maj_categorie) VALUES ('$nom_categorie','$photo_categorie','$date_heure_jour')";
  
